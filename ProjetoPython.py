@@ -1,0 +1,83 @@
+from operacoesbd import *
+from os import remove
+
+opçoes = 0
+def menu():
+    print('-=' * 10, 'MENU', '-=' * 10)
+    print('[ 1 ] Registrar uma nova reclamação\n[ 2 ] Listar reclamações registradas')
+    print('[ 3 ] Pesquisar uma reclamação pelo código\n[ 4 ] Atualizar uma reclamação existente')
+    print('[ 5 ] Remover uma reclamação pelo código\n[ 6 ] Mostrar quantidade total de reclamações')
+    print('[ 7 ] Sair do programa')
+    opçoes = int(input('Qual opção deseja escolher: '))
+    print('-=' * 23)
+    return opçoes
+
+def registrarNovaReclamacao(conexao):
+    reclamaçao = input('Registre sua reclamação: ')
+    #print(f'O código da sua reclamação é: {codigo}')
+    sql = 'INSERT INTO reclamacoes (reclamacao) values(%s)'
+    dados = (reclamaçao,)
+    insertNoBancoDados(conexao, sql, dados)
+    print('Reclamação registrada com sucesso!')
+
+def listarReclamacoesRegistradas(conexao):
+    sql = 'SELECT * FROM reclamacoes'
+    resultado = listarBancoDados(conexao, sql)
+    for rec in resultado:
+        print(f'id: {rec[0]}\nReclamação: {rec[1]}')
+        print('-' * 7)
+
+def pesquisarReclamacaoPeloCodigo(conexao):
+    codigoProcurado = int(input('Informe o código da reclamação: '))
+    sql = 'SELECT reclamacao FROM reclamacoes WHERE id = %s'
+    dados = (codigoProcurado,)
+    resultado = listarBancoDados(conexao, sql, dados)
+    for rec in resultado:
+        print(f'Reclamação: {rec}')
+
+def atualizarReclamacaoExistente(conexao):
+    codigoProcurado = int(input('Informe o código da reclamação que deseja atualizar: '))
+    attReclamaçao = input('Informe a nova reclamação: ')
+    sql = 'UPDATE reclamacoes SET reclamacao = %s WHERE id = %s'
+    dados = (attReclamaçao, codigoProcurado)
+    qntLinhas = atualizarBancoDados(conexao, sql, dados)
+    if qntLinhas == 0:
+        print('Não há reclamacões com este código')
+    else:
+        print('Reclamação atualizado com sucesso!')
+
+def removerReclamacaoPeloCodigo(conexao):
+    codigoProcurado = int(input('Informe o codigo da reclamação que deseja remover: '))
+    sql = 'DELETE FROM reclamacoes WHERE id = %s'
+    dados = (codigoProcurado,)
+    qntLinhas = excluirBancoDados(conexao, sql, dados)
+    if qntLinhas == 0:
+        print('Não há reclamações com esse código')
+    else:
+        print('Reclamão removida com sucesso!')
+
+def quantidadeDeReclamacoes(conexao):
+    sql = 'SELECT * FROM reclamacoes'
+    qntRec = listarBancoDados(conexao, sql)
+    print(f'No momento há {len(qntRec)} reclamações')
+
+while opçoes != 7:
+    conexao = criarConexao('localhost', 'root', '123456', 'projetopython')
+    inicializarTabela(conexao)
+    opçoes = menu()
+    if 0 < opçoes < 8:
+        if opçoes == 1:
+            codigo = registrarNovaReclamacao(conexao)
+        elif opçoes == 2:
+            listarReclamacoesRegistradas(conexao)
+        elif opçoes == 3:
+            pesquisarReclamacaoPeloCodigo(conexao)
+        elif opçoes == 4:
+            atualizarReclamacaoExistente(conexao)
+        elif opçoes == 5:
+            codigo = removerReclamacaoPeloCodigo(conexao)
+        elif opçoes == 6:
+            quantidadeDeReclamacoes(conexao)
+    else:
+        print('Opção invalida. Tente novamente')
+print('Obrigado por utilizar o sistema!')
