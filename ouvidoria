@@ -1,0 +1,21 @@
+from operacoesbd import *
+from os import remove
+
+opçoes = 0
+def menu():
+    print('-=' * 10, 'MENU', '-=' * 10)
+    print('[ 1 ] Registrar uma nova reclamação\n[ 2 ] Listar reclamações registradas')
+    print('[ 3 ] Pesquisar uma reclamação pelo código\n[ 4 ] Atualizar uma reclamação existente')
+    print('[ 5 ] Remover uma reclamação pelo código\n[ 6 ] Mostrar quantidade total de reclamações')
+    print('[ 7 ] Sair do programa')
+    opçoes = int(input('Qual opção deseja escolher: '))
+    print('-=' * 23)
+    return opçoes
+
+def registrarNovaReclamacao(conexao):
+    reclamaçao = input('Registre sua reclamação: ')
+    #print(f'O código da sua reclamação é: {codigo}')
+    sql = 'INSERT INTO reclamacoes (reclamacao) values(%s)'
+    dados = (reclamaçao,)
+    insertNoBancoDados(conexao, sql, dados)
+    print('Reclamação registrada com sucesso!')
