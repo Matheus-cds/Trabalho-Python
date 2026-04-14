@@ -20,6 +20,27 @@ def registrarNovaReclamacao(conexao):
     insertNoBancoDados(conexao, sql, dados)
     print('Reclamação registrada com sucesso!')
 
+def atualizarReclamacaoExistente(conexao):
+    codigoProcurado = int(input('Informe o código da reclamação que deseja atualizar: '))
+    attReclamaçao = input('Informe a nova reclamação: ')
+    sql = 'UPDATE reclamacoes SET reclamacao = %s WHERE id = %s'
+    dados = (attReclamaçao, codigoProcurado)
+    qntLinhas = atualizarBancoDados(conexao, sql, dados)
+    if qntLinhas == 0:
+        print('Não há reclamacões com este código')
+    else:
+        print('Reclamação atualizado com sucesso!')
+
+def removerReclamacaoPeloCodigo(conexao):
+    codigoProcurado = int(input('Informe o codigo da reclamação que deseja remover: '))
+    sql = 'DELETE FROM reclamacoes WHERE id = %s'
+    dados = (codigoProcurado,)
+    qntLinhas = excluirBancoDados(conexao, sql, dados)
+    if qntLinhas == 0:
+        print('Não há reclamações com esse código')
+    else:
+        print('Reclamão removida com sucesso!')
+
 def listarReclamacoesRegistradas(conexao):
     sql = 'SELECT * FROM reclamacoes'
     resultado = listarBancoDados(conexao, sql)
