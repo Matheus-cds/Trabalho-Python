@@ -19,3 +19,29 @@ def registrarNovaReclamacao(conexao):
     dados = (reclamaçao,)
     insertNoBancoDados(conexao, sql, dados)
     print('Reclamação registrada com sucesso!')
+
+def quantidadeDeReclamacoes(conexao):
+    sql = 'SELECT * FROM reclamacoes'
+    qntRec = listarBancoDados(conexao, sql)
+    print(f'No momento há {len(qntRec)} reclamações')
+
+while opçoes != 7:
+    conexao = criarConexao('localhost', 'root', '123456', 'projetopython')
+    inicializarTabela(conexao)
+    opçoes = menu()
+    if 0 < opçoes < 8:
+        if opçoes == 1:
+            codigo = registrarNovaReclamacao(conexao)
+        elif opçoes == 2:
+            listarReclamacoesRegistradas(conexao)
+        elif opçoes == 3:
+            pesquisarReclamacaoPeloCodigo(conexao)
+        elif opçoes == 4:
+            atualizarReclamacaoExistente(conexao)
+        elif opçoes == 5:
+            codigo = removerReclamacaoPeloCodigo(conexao)
+        elif opçoes == 6:
+            quantidadeDeReclamacoes(conexao)
+    else:
+        print('Opção invalida. Tente novamente')
+print('Obrigado por utilizar o sistema!')
