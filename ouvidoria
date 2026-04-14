@@ -19,3 +19,18 @@ def registrarNovaReclamacao(conexao):
     dados = (reclamaçao,)
     insertNoBancoDados(conexao, sql, dados)
     print('Reclamação registrada com sucesso!')
+
+def listarReclamacoesRegistradas(conexao):
+    sql = 'SELECT * FROM reclamacoes'
+    resultado = listarBancoDados(conexao, sql)
+    for rec in resultado:
+        print(f'id: {rec[0]}\nReclamação: {rec[1]}')
+        print('-' * 7)
+
+def pesquisarReclamacaoPeloCodigo(conexao):
+    codigoProcurado = int(input('Informe o código da reclamação: '))
+    sql = 'SELECT reclamacao FROM reclamacoes WHERE id = %s'
+    dados = (codigoProcurado,)
+    resultado = listarBancoDados(conexao, sql, dados)
+    for rec in resultado:
+        print(f'Reclamação: {rec}')
